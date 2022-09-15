@@ -72,7 +72,7 @@ const Header = ({authState, setAuthState}: Props) => {
                     <img className={`h-10 w-10 rounded-full border-[5px] border-orange-800 hover:rotate-180 hover:border-[9px] hover:border-red-900 duration-700 ${navActive && 'border-[9px] border-red-900'}`} src={supabaseImage} alt='logo_home' />
                 </button>
                 <button onClick={clickHome}>
-                    <div className="text-2xl font-extrabold uppercase hover:animate-pulse">Supablog</div>
+                    <div className="text-2xl font-extrabold uppercase hover:animate-pulse">Supachat</div>
                 </button>
                 {authState === false ?
                 (<button onClick={clickLogin} className='bg-orange-800 px-4 py-2 shadow-lg rounded-md opacity-70 hover:opacity-100 duration-500 text-sm'>Login</button>)
