@@ -12,7 +12,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <Auth.UserContextProvider supabaseClient={supabase}>
-      <div className='flex min-h-screen flex-col items-center bg-gradient-to-bl from-slate-700 to-black text-white'>
+      <div className='flex flex-col min-h-screen items-center bg-gradient-to-bl from-slate-700 to-black text-white'>
         <Header
           authState={authState}
           setAuthState={setAuthState}

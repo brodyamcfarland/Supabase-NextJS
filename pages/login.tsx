@@ -10,7 +10,7 @@ const login = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (typeof email === 'string' && typeof password === 'string') {
+        if (email.length > 0 && password.length > 0) {
         const { error } = await supabase.auth.signIn({
             email,
             password,

@@ -40,22 +40,22 @@ const Header = ({authState, setAuthState}: Props) => {
       router.push('/profile');        
     }
 
-    useEffect(() => {
-        const { data: authListener } = supabase.auth.onAuthStateChange((event: any, session: any) => {
-          handleAuthChange(event, session);
-          if ( event === 'SIGNED_IN') {
-            setAuthState(true);
-            router.push('/profile');
-          }
-          if ( event === 'SIGNED_OUT') {
-            setAuthState(false);
-          }
-        })
-        checkUser();
-        return () => {
-          authListener?.unsubscribe();
-        }
-      }, []);
+    // useEffect(() => {
+    //     const { data: authListener } = supabase.auth.onAuthStateChange((event: any, session: any) => {
+    //       handleAuthChange(event, session);
+    //       if ( event === 'SIGNED_IN') {
+    //         setAuthState(true);
+    //         router.push('/profile');
+    //       }
+    //       if ( event === 'SIGNED_OUT') {
+    //         setAuthState(false);
+    //       }
+    //     })
+    //     checkUser();
+    //     return () => {
+    //       authListener?.unsubscribe();
+    //     }
+    //   }, []);
 
       const handleAuthChange = async (event: any, session: any) => {
         await fetch('/api/auth', {
@@ -75,7 +75,7 @@ const Header = ({authState, setAuthState}: Props) => {
 
   return (
     <>
-        <div className='flex items-center justify-between px-5 h-14 w-full bg-[#000000b0] border-b-[1px] select-none'>
+        <div className='fixed flex items-center justify-between px-5 h-14 w-full bg-black border-gray-700 border-b-[1px] select-none'>
                 <button className='w-[76px]' onClick={(e) => clickNav(e)}>
                     <img className={`h-10 w-10 rounded-full border-[5px] border-orange-800 hover:rotate-180 hover:border-[9px] hover:border-red-900 duration-700 ${navActive && 'border-[9px] border-red-900'}`} src={supabaseImage} alt='logo_home' />
                 </button>
