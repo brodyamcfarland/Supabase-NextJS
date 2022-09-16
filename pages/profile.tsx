@@ -55,7 +55,7 @@ const profile = () => {
 
             </div>
         </div>
-        <button className='mt-10 w-[7rem] m-auto rounded-md py-1 bg-red-800 opacity-70 hover:opacity-100 duration-500' onClick={signOut}>Logout</button>
+        <button className='bg-red-800 px-4 py-2 mt-9 m-auto shadow-lg rounded-md opacity-70 hover:opacity-100 duration-500 text-sm w-[5rem]' onClick={signOut}>Logout</button>
     </div>
   )
 };
