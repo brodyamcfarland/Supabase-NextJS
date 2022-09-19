@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { getEnvironmentData } from 'worker_threads';
+import { useEffect, useState, useRef } from 'react';
 import supabase from '../utils/supabase';
 
 interface Message {
@@ -12,18 +11,26 @@ interface Message {
     }
 }
 
-const Messages = () => {
+interface MessagesProps {
+    roomId: string;
+}
+
+const Messages = ({roomId}: MessagesProps) => {
 
     const [messages, setMessages] = useState<Message[]>([]);
+    const messagesRef = useRef<HTMLDivElement>(null);
     const userId = supabase.auth.user()?.id;
 
     const getData = async () => {
-        const { data } = await supabase.from<Message>('messages').select('*, profiles(username)')
+        const { data } = await supabase.from<Message>('messages').select('*, profiles(username)').match({room_id: roomId})
         if (!data) {
             alert('No Data Available')
             return
         };
         setMessages(data);
+        if(messagesRef.current) {
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+        }
     };
 
     useEffect(() => {
@@ -31,7 +38,7 @@ const Messages = () => {
     }, []);
 
     useEffect(() => {
-        const subscription = supabase.from<Message>('messages').on('INSERT', () => {
+        const subscription = supabase.from<Message>('messages').on('*', () => {
             getData()
         }).subscribe()
 
@@ -41,7 +48,7 @@ const Messages = () => {
     }, []);
     
   return (
-    <div className='overflow-y-scroll flex-1 bg-gradient-to-tr from-black to-[#474747] border-gray-700 border-r-[1px] border-l-[1px] mt-12'>
+    <div className='overflow-y-scroll flex-1 bg-gradient-to-tr from-black to-[#474747] border-gray-700 border-r-[1px] border-l-[1px] mt-12' ref={messagesRef}>
         <ul className='flex flex-col justify-end p-4 space-y-2'>
             {messages.map((message) => (
             <li key={message.id} className={message.profile_id === userId ? 'self-end rounded-md bg-orange-800 px-3 py-1 shadow-md' : 'self-start rounded-md bg-gray-700 px-3 py-1 shadow-md'}>

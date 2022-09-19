@@ -5,8 +5,6 @@ import supabase from '../utils/supabase';
 import { MdSend } from 'react-icons/md';
 import Messages from '../components/Messages';
 
-
-
 const Home: NextPage = (posts) => {
 
   const [message, setMessage] = useState<string>('');
