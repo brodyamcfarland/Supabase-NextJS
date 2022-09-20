@@ -22,7 +22,7 @@ const Messages = ({roomId}: MessagesProps) => {
     const userId = supabase.auth.user()?.id;
 
     const getData = async () => {
-        const { data } = await supabase.from<Message>('messages').select('*, profiles(username)').match({room_id: roomId})
+        const { data } = await supabase.from<Message>('messages').select('*, profiles(username)').match({room_id: roomId}).order('created_at');
         if (!data) {
             alert('No Data Available')
             return
@@ -38,7 +38,7 @@ const Messages = ({roomId}: MessagesProps) => {
     }, []);
 
     useEffect(() => {
-        const subscription = supabase.from<Message>('messages').on('*', () => {
+        const subscription = supabase.from<Message>(`messages:room_id=eq.${roomId}`).on('INSERT', () => {
             getData()
         }).subscribe()
 
