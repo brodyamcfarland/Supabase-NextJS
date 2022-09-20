@@ -7,16 +7,11 @@ import supabase from '../utils/supabase';
 import { Auth } from '@supabase/ui';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const [authState, setAuthState] = useState<boolean>(false);
   const router = useRouter();
 
   return (
     <Auth.UserContextProvider supabaseClient={supabase}>
-      <div className='flex flex-col min-h-screen items-center bg-gradient-to-bl from-slate-700 to-black text-white'>
-        <Header
-          authState={authState}
-          setAuthState={setAuthState}
-        />
+      <div className='flex flex-col h-screen items-center bg-gradient-to-bl from-slate-700 to-black text-white'>
         <Component {...pageProps} />
       </div>
     </Auth.UserContextProvider>

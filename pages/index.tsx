@@ -1,41 +1,66 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import supabase from '../utils/supabase';
-import { MdSend } from 'react-icons/md';
-import Messages from '../components/Messages';
+import Link from 'next/link';
+import Header, { Room } from '../components/Header';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = (posts) => {
+  const router = useRouter();
+  const [rooms, setRooms] = useState<Room[]>([]);
 
-  const [message, setMessage] = useState<string>('');
+  const handleNewRoom = async () => {
+    const { data, error } = await supabase.rpc<Room>('create_room').single();
 
-  const sendMessage = async (e: any) => {
-    e.preventDefault();
-    if (message.length > 0) {
-      const { error, data } = await supabase.from('messages').insert({ content: message });
-      if (error) {
-          alert(error.message);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    if (data) {
+      router.push(`/rooms/${data.id}`)
+    }
+  }
+
+  useEffect(() => {
+    const getRooms = async () => {
+      const { data } = await supabase.from<Room>('rooms').select('*').order('created_at', {ascending: false})
+
+      if (data) {
+        setRooms(data);
       }
     }
-    e.target.reset();
-  };
+    getRooms();
+  }, []);
 
+  
   return (
-    <div className="flex flex-col h-screen w-full px-3 md:px-20 text-center">
-      <Head>
-        <title>Supachat</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Messages/>
-      <form className='bg-[#000000b0] py-2 flex flex-row items-center justify-between px-5 border-gray-700 border-r-[1px] border-l-[1px] border-t-[1px]'
-        onSubmit={sendMessage}
-      >
-          <input onChange={(e) => setMessage(e.target.value)}className='w-full rounded-md px-2 py-1 shadow-inner bg-gray-800 text-white' type='text' name='message' placeholder='...'></input>
-          <div>
-            <button type='submit' className='flex justify-center items-center h-8 w-8 rounded-full ml-2 bg-emerald-600 opacity-60 hover:opacity-100 duration-500'><MdSend size={20} /></button>
-          </div>
-      </form>
-    </div>
+    <>
+      <Header/>
+      <div className="flex flex-col h-screen w-full px-3 md:px-20 text-center">
+        <Head>
+          <title>Supachat</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div className='bg-[#000000b0] mx-3 py-2 md:mx-20 border-r-[1px] border-l-[1px] border-b-[1px] border-gray-700 shadow-md flex px-5 justify-between'>
+          <div className='font-bold'>My Rooms</div>
+          <button onClick={handleNewRoom} className='text-xs px-2 h-7 rounded-md bg-emerald-700 opacity-70 hover:opacity-100 duration-500'>+ New Room</button>
+        </div>
+        <div className='flex-1 flex-col text-left flex bg-gradient-to-tr from-black to-[#474747] p-4 mx-3 md:mx-20 border-r-[1px] border-l-[1px] border-b-[1px] border-gray-700 shadow-md'>
+          {rooms.map(room => (
+            <div key={room.id}>
+              <p>
+                <Link href={`/rooms/${room.id}`}>
+                  <a className='hover:text-orange-700 duration-500'>{room.name ?? 'Untitled'}</a>
+                </Link>
+              </p>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </>
   )
 }
 

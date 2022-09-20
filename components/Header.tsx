@@ -2,11 +2,7 @@ import { useRouter } from 'next/router';
 import supabase from '../utils/supabase';
 import { useState, useEffect } from 'react';
 
-interface Props {
-    authState: boolean;
-    setAuthState: any;
-}
-interface Room {
+export interface Room {
   id: string;
   name: string | null;
   created_at: string;
@@ -14,7 +10,8 @@ interface Room {
 
 const supabaseImage = '/supabase.jpg';
 
-const Header = ({authState, setAuthState}: Props) => {
+const Header = () => {
+    const [authState, setAuthState] = useState<boolean>(false);
     const [navActive, setNavActive] = useState<boolean>(false);
     const router = useRouter();
 
@@ -45,19 +42,6 @@ const Header = ({authState, setAuthState}: Props) => {
       router.push('/profile');        
     }
 
-    const handleNewRoom = async () => {
-      const { data, error } = await supabase.rpc<Room>('create_room').single();
-
-      if (error) {
-        alert(error.message);
-        return;
-      }
-
-      if (data) {
-        router.push(`/rooms/${data.id}`)
-      }
-    }
-
       const handleAuthChange = async (event: any, session: any) => {
         await fetch('/api/auth', {
           method: 'POST',
@@ -76,12 +60,11 @@ const Header = ({authState, setAuthState}: Props) => {
 
   return (
     <>
-        <div className='fixed flex items-center justify-between px-5 h-14 w-full bg-black border-gray-700 border-b-[1px] select-none'>
+        <div className='flex items-center justify-between px-5 py-[8px] w-full bg-black border-gray-700 border-b-[1px] select-none'>
                 <div className='flex w-[10rem] items-center'>
                   <button onClick={(e) => clickNav(e)} className='flex-1'>
                       <img className={`h-10 w-10 rounded-full border-[5px] border-orange-800 hover:rotate-180 hover:border-[9px] hover:border-red-900 duration-700 ${navActive && 'border-[9px] border-red-900'}`} src={supabaseImage} alt='logo_home' />
                   </button>
-                  <button onClick={handleNewRoom} className='text-xs px-2 h-7 rounded-md bg-emerald-700 opacity-70 hover:opacity-100 duration-500'>+ New Room</button>
                 </div>
                 <button onClick={clickHome}>
                     <div className="text-2xl font-extrabold uppercase hover:animate-pulse">Supachat</div>
