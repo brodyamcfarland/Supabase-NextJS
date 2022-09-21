@@ -80,10 +80,11 @@ const Messages = ({roomId, profileCache, setProfileCache}: MessagesProps) => {
     }, []);
     
   return (
-    <div className='overflow-y-scroll h-screen bg-gradient-to-tr from-black to-[#474747] border-gray-700 border-r-[1px] border-l-[1px] mx-3 md:mx-20' ref={messagesRef}>
+    <div className='overflow-y-scroll scrollbar-hide h-screen bg-gradient-to-tr from-black to-[#474747] border-gray-700 border-r-[1px] border-l-[1px] mx-3 md:mx-20' ref={messagesRef}>
         <ul className='flex flex-col flex-1 justify-end p-4 space-y-2'>
             {messages.map((message) => (
-                <Message 
+                <Message
+                    key={message.id}
                     message={message}
                     profile={profileCache[message.profile_id]}
                     setProfileCache={setProfileCache}

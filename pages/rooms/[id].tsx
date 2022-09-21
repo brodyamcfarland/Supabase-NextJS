@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Header from '../../components/Header';
 import UserList from '../../components/UserList';
 import {ProfileCache, Profile } from '../../utils/types';
+import { HiOutlinePencil } from 'react-icons/hi';
 
 const Room = () => {
   const [profileCache, setProfileCache] = useState<ProfileCache>({});
@@ -60,6 +61,18 @@ const Room = () => {
     };
   };
 
+  const handleEditRoomName = async () => {
+    const newRoomName = prompt('Rename Room to:');
+    const oldRoomName = roomName;
+    if (!newRoomName) return;
+    setRoomName(newRoomName);
+    const { data, error } = await supabase.from('rooms').update({ name: newRoomName }).match({ id: roomId });
+    if (error) {
+      alert(error.message);
+      setRoomName(oldRoomName);
+    }
+  };
+
   return (
     <div className="flex flex-col max-h-screen w-full text-center">
       <Head>
@@ -68,8 +81,14 @@ const Room = () => {
       </Head>
       <Header/>
       <div className='bg-[#000000b0] flex flex-row items-center pl-5 justify-between mx-3 md:mx-20 border-r-[1px] border-l-[1px] border-b-[1px] border-gray-700 shadow-md'>
-        <div className='font-semibold'>{roomName}</div>
-        <input onKeyPress={handleInvite} className='h-8 m-1' type='text' />
+        <div className='flex items-center'>
+          <div className='font-semibold pr-2'>{roomName}</div>
+          <button onClick={handleEditRoomName} className='flex items-center justify-center h-8 w-8 rounded-full hover:bg-[#ffffff23] duration-500'><HiOutlinePencil/></button>
+        </div>
+        <div className='flex flex-col'>
+          <div className='text-emerald-500 text-xs text-left pl-2'>Invite</div>
+          <input onKeyPress={handleInvite} placeholder='Username' className='h-6 text-sm mb-1 mr-1 rounded-md shadow-inner bg-gray-800 text-white' type='text' />
+        </div>
       </div>
       {roomId && <Messages 
                     roomId={roomId}

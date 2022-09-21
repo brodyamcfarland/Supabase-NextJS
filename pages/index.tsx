@@ -44,7 +44,7 @@ const Home: NextPage = (posts) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className='bg-[#000000b0] mx-3 py-2 md:mx-20 border-r-[1px] border-l-[1px] border-b-[1px] border-gray-700 shadow-md flex px-5 justify-between'>
-          <div className='font-bold'>My Rooms</div>
+          <div className='font-bold'>Room History</div>
           <button onClick={handleNewRoom} className='text-xs px-2 h-7 rounded-md bg-emerald-700 opacity-70 hover:opacity-100 duration-500'>+ New Room</button>
         </div>
         <div className='flex-1 flex-col text-left flex bg-gradient-to-tr from-black to-[#474747] p-4 mx-3 md:mx-20 border-r-[1px] border-l-[1px] border-b-[1px] border-gray-700 shadow-md'>
