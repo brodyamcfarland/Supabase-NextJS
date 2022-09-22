@@ -80,9 +80,17 @@ const Messages = ({roomId, profileCache, setProfileCache}: MessagesProps) => {
           supabase.removeSubscription(subscription)
         }
       }, [])
+
+      const scrollToBottom = () => {
+        messagesRef.current?.scrollIntoView({ behavior: "smooth" })
+      }
+    
+      useEffect(() => {
+        scrollToBottom()
+      }, [messages]);
     
   return (
-    <div className='overflow-y-scroll scrollbar-hide h-screen bg-gradient-to-tr from-black to-[#474747] border-gray-700 border-r-[1px] border-l-[1px] mx-3 md:mx-20' ref={messagesRef}>
+    <div className='overflow-y-scroll scrollbar-hide h-screen bg-gradient-to-tr from-black to-[#474747] border-gray-700 border-r-[1px] border-l-[1px] mx-3 md:mx-20'>
         <ul className='flex flex-col flex-1 justify-end p-4 space-y-2'>
             {messages.map((message) => (
                 <Message
@@ -92,6 +100,7 @@ const Messages = ({roomId, profileCache, setProfileCache}: MessagesProps) => {
                     setProfileCache={setProfileCache}
                 />
             ))}
+            <div ref={messagesRef}/>
         </ul>
     </div>
   )
