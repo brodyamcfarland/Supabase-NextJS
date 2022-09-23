@@ -1,8 +1,10 @@
 import supabase from '../utils/supabase';
 import { useState } from 'react';
 import Header from '../components/Header';
+import { useRouter } from 'next/router';
 
 export default function Register() {
+    const router = useRouter();
     const [password, setPassword] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
@@ -14,6 +16,7 @@ export default function Register() {
         setPassword('');
         setEmail('');
         setUsername('');
+        router.push('/confirmation')
     }
 
     return (

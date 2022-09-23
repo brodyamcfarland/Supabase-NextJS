@@ -8,6 +8,7 @@ import Header from '../../components/Header';
 import UserList from '../../components/UserList';
 import {ProfileCache, Profile } from '../../utils/types';
 import { HiOutlinePencil } from 'react-icons/hi';
+import { BsFillArrowRightCircleFill } from 'react-icons/bs';
 
 const Room = () => {
   const [profileCache, setProfileCache] = useState<ProfileCache>({});
@@ -61,6 +62,19 @@ const Room = () => {
     };
   };
 
+  const handleInviteButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      const target = e.currentTarget;
+      const { data } = await supabase.from<Profile>('profiles').select('id, username').match({ username: target.value }).single()
+      if (!data) {
+        return alert('User not found!')
+      }
+      const { error } = await supabase.from('room_participants').insert({profile_id: data.id, room_id: roomId});
+      if (error) {
+        return alert(error.message);
+      }
+      target.value = '';
+  };
+
   const handleEditRoomName = async () => {
     const newRoomName = prompt('Rename Room to:');
     const oldRoomName = roomName;
@@ -85,9 +99,12 @@ const Room = () => {
           <div className='font-semibold pr-2'>{roomName}</div>
           <button onClick={handleEditRoomName} className='flex items-center justify-center h-8 w-8 rounded-full hover:bg-[#ffffff23] duration-500'><HiOutlinePencil/></button>
         </div>
-        <div className='flex flex-col'>
-          <div className='text-emerald-500 text-xs text-left pl-2'>Invite</div>
-          <input onKeyPress={handleInvite} placeholder='Username' className='h-6 text-sm mb-1 mr-1 rounded-md shadow-inner bg-gray-800 text-white' type='text' />
+        <div className='flex flex-col py-1 pr-3'>
+          <div className='text-emerald-500 text-xs text-left pl-10'>Invite</div>
+          <div className='flex flex-row items-center justify-center gap-3'>
+            <button onClick={handleInviteButton} className='opacity-60 hover:opacity-100 duration-300 pb-1'><BsFillArrowRightCircleFill size={25} color='green'/></button>
+            <input onKeyPress={handleInvite} placeholder='Username' className='h-6 text-sm mb-1 mr-1 rounded-md shadow-inner bg-gray-800 text-white' type='text' />
+          </div>
         </div>
       </div>
       {roomId && <Messages 
@@ -100,9 +117,9 @@ const Room = () => {
         onSubmit={sendMessage}
       >
           <input onChange={(e) => setMessage(e.target.value)}className='w-full rounded-md px-2 py-1 shadow-inner bg-gray-800 text-white' type='text' name='message' placeholder='...'></input>
-          <div>
-            <button type='submit' className='flex border-[2px] border-gray-100 justify-center items-center h-8 w-8 rounded-full ml-2 bg-emerald-600 opacity-60 hover:opacity-100 duration-500'><MdSend size={20} /></button>
-          </div>
+          
+          <button type='submit' className='flex border-[2px] border-gray-100 justify-center items-center h-8 w-8 rounded-full ml-2 bg-emerald-600 opacity-60 hover:opacity-100 duration-500'><MdSend size={20} /></button>
+          
       </form>
       <UserList profileCache={profileCache} />
     </div>
