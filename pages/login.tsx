@@ -2,6 +2,7 @@ import supabase from "../utils/supabase";
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Header from "../components/Header";
+import toast from 'react-hot-toast';
 
 const login = () => {
     const router = useRouter();
@@ -17,7 +18,7 @@ const login = () => {
             password,
         })
         if (error) {
-            alert(error.message)
+            toast.error(`Error: ${error.message}`)
             return
         }
         router.push('/')

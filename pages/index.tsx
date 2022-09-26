@@ -5,6 +5,7 @@ import supabase from '../utils/supabase';
 import Link from 'next/link';
 import Header, { Room } from '../components/Header';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 const Home: NextPage = (posts) => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const Home: NextPage = (posts) => {
     const { data, error } = await supabase.rpc<Room>('create_room').single();
 
     if (error) {
-      alert(error.message);
+      toast.error(`Error: ${error.message}`);
       return;
     }
 
